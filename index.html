@@ -53,24 +53,24 @@
 
         body::before, body::after {
             content: ''; position: fixed; border-radius: 50%;
-            filter: blur(150px); z-index: -1; pointer-events: none;
-            animation: drift 20s infinite ease-in-out alternate;
+            filter: blur(120px); z-index: -1; pointer-events: none;
         }
         body::before {
             top: -10%; left: -10%; width: 50vw; height: 50vw;
             background: radial-gradient(circle, rgba(28,204,132,0.12) 0%, rgba(0,0,0,0) 60%);
+            animation: drift 20s infinite ease-in-out alternate;
         }
         body::after {
             bottom: -20%; right: -10%; width: 60vw; height: 60vw;
             background: radial-gradient(circle, rgba(14, 60, 120, 0.15) 0%, rgba(0,0,0,0) 60%);
-            animation-delay: -10s;
+            animation: drift 25s infinite ease-in-out alternate-reverse;
         }
 
-        /* Typography Refinements */
+        /* Fluid Typography */
         h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; }
-        h1 { font-size: 4rem; margin-bottom: 1.2rem; }
-        h2 { font-size: 2.8rem; margin-bottom: 1.5rem; }
-        p { line-height: 1.7; margin-bottom: 1rem; color: var(--text-muted); font-size: 1.1rem; font-weight: 300; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 1.2rem; }
+        h2 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 1.5rem; }
+        p { line-height: 1.7; margin-bottom: 1rem; color: var(--text-muted); font-size: clamp(1rem, 1.2vw, 1.15rem); font-weight: 300; }
         
         .gradient-text {
             background: linear-gradient(180deg, #FFFFFF 0%, #94A3B8 100%);
@@ -88,14 +88,13 @@
         /* Ultra-Premium Glassmorphism Utility */
         .glass-panel {
             background: var(--glass-bg);
-            backdrop-filter: blur(24px) saturate(150%);
-            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            backdrop-filter: blur(12px) saturate(120%);
+            -webkit-backdrop-filter: blur(12px) saturate(120%);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            /* The 'edge light' effect */
             box-shadow: inset 0 1px 0 0 var(--glass-highlight), 
                         0 20px 40px -10px rgba(0, 0, 0, 0.5);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
         }
 
         /* Navigation */
@@ -103,14 +102,14 @@
             position: fixed; top: 0; left: 0; right: 0;
             padding: 1.2rem 5%; display: flex;
             justify-content: space-between; align-items: center;
-            background: rgba(3, 3, 5, 0.5);
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            background: rgba(3, 3, 5, 0.7);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
             z-index: 1000;
         }
 
         .logo { 
-            font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; 
+            font-family: var(--font-head); font-size: clamp(1.5rem, 2vw, 1.8rem); font-weight: 800; 
             color: var(--text-main); text-decoration: none; letter-spacing: -0.5px;
             display: flex; align-items: center; transition: transform 0.4s ease;
         }
@@ -123,29 +122,46 @@
         }
         .menu-btn span {
             display: block; width: 30px; height: 2px;
-            background-color: var(--text-main); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background-color: var(--text-main); transition: 0.4s ease;
             border-radius: 2px;
         }
         .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); background-color: var(--accent); }
         .menu-btn.active span:nth-child(2) { opacity: 0; transform: translateX(20px); }
         .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); background-color: var(--accent); }
 
+        /* FIXED FLYOUT MENU */
         .flyout-menu {
-            position: fixed; top: 0; right: -100%;
-            width: 350px; height: 100vh;
-            background: rgba(10, 12, 16, 0.95);
-            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            position: fixed; top: 0; 
+            right: -400px; /* Hide completely off-screen by default */
+            width: 100%; max-width: 320px; height: 100vh;
+            background: rgba(10, 12, 16, 0.98);
             border-left: 1px solid var(--glass-border);
-            padding: 8rem 3rem; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 999; display: flex; flex-direction: column; gap: 1.5rem;
+            padding: 6rem 2.5rem 3rem 2.5rem; /* Adjusted padding so elements fit on laptops */
+            transition: right 0.5s ease;
+            z-index: 999; display: flex; flex-direction: column; gap: 1rem;
+            box-sizing: border-box; 
+            overflow-y: auto; /* Adds scrollbar inside menu if screen is very small */
         }
-        .flyout-menu.open { right: 0; box-shadow: -30px 0 60px rgba(0,0,0,0.7); }
-        .flyout-menu a {
+        .flyout-menu.open { 
+            right: 0; 
+            box-shadow: -30px 0 60px rgba(0,0,0,0.7); 
+        }
+        .flyout-menu a.nav-link {
             font-family: var(--font-head); color: var(--text-muted); text-decoration: none; 
-            font-size: 1.2rem; font-weight: 500; transition: all 0.4s ease; 
-            padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 1.15rem; font-weight: 500; transition: all 0.3s ease; 
+            padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.03);
+            display: block;
         }
-        .flyout-menu a:hover { color: var(--text-main); transform: translateX(8px); border-color: var(--accent); }
+        .flyout-menu a.nav-link:hover { color: var(--text-main); transform: translateX(8px); border-color: var(--accent); }
+
+        /* FIXED FLYOUT MENU CONTACT BUTTON */
+        .menu-fixed-btn {
+            display: block;
+            width: 100%; 
+            text-align: center;
+            margin-top: 1.5rem;
+            box-sizing: border-box;
+        }
 
         /* Buttons */
         .btn {
@@ -157,7 +173,8 @@
             border-radius: 50px; border: none;
             box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 10px 20px rgba(28, 204, 132, 0.2); 
             cursor: pointer; position: relative; overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box;
         }
         .btn::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
@@ -170,13 +187,18 @@
         }
         .btn:hover::after { left: 100%; }
 
-        /* Layout */
-        section { padding: 9rem 5%; max-width: 1200px; margin: 0 auto; position: relative; }
+        /* Fluid Layout */
+        section { 
+            padding: clamp(6rem, 12vh, 10rem) 5%; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            position: relative; 
+        }
 
         /* Floating Animation */
         @keyframes float {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
+            50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
         }
 
@@ -185,7 +207,7 @@
             min-height: 100vh; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; text-align: center;
         }
-        .hero-content { animation: float 8s ease-in-out infinite; max-width: 850px; margin: 0 auto;}
+        .hero-content { animation: float 6s ease-in-out infinite; max-width: 900px; margin: 0 auto;}
         .shark-tank { 
             display: inline-flex; align-items: center; gap: 8px;
             background: rgba(245, 158, 11, 0.05);
@@ -200,15 +222,25 @@
         /* Stats Grid */
         .stats-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem; margin-top: 5rem; width: 100%;
+            gap: 1.5rem; margin-top: clamp(3rem, 6vh, 5rem); width: 100%;
         }
         .stat-card { padding: 2.5rem 1.5rem; text-align: center; display: flex; flex-direction: column; justify-content: center;}
         .stat-card:hover { transform: translateY(-8px); border-color: rgba(28, 204, 132, 0.3); background: rgba(255,255,255,0.04); }
-        .stat-card h3 { font-size: 3.5rem; margin-bottom: 0.5rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-card h3 { 
+            font-size: clamp(1.8rem, 2.5vw, 2.8rem); 
+            margin-bottom: 0.5rem; 
+            background: var(--accent-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            white-space: nowrap; 
+            letter-spacing: -1px;
+        }
 
-        /* Services Grid - 2 Columns */
+        /* Services Grid */
         .services-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 1.5rem;
         }
         .service-card {
             padding: 1.8rem; display: flex; align-items: center; gap: 20px; cursor: pointer;
@@ -224,7 +256,7 @@
             background: rgba(28, 204, 132, 0.05);
             width: 55px; height: 55px; display: flex; justify-content: center; align-items: center;
             border-radius: 16px; border: 1px solid rgba(28, 204, 132, 0.2); flex-shrink: 0;
-            transition: all 0.4s ease;
+            transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
         .service-card:hover .service-icon { background: var(--accent); color: #fff; box-shadow: 0 0 20px var(--accent-glow); }
 
@@ -239,48 +271,60 @@
             font-size: 1.5rem; border-radius: 18px; flex-shrink: 0;
             box-shadow: inset 0 2px 2px rgba(255,255,255,0.4), 0 10px 20px rgba(28, 204, 132, 0.3);
         }
-        .step h3 { font-size: 1.5rem; margin-bottom: 0.4rem; color: #fff; }
+        .step h3 { font-size: clamp(1.3rem, 2vw, 1.5rem); margin-bottom: 0.4rem; color: #fff; }
 
-        /* Testimonials Slider (With Minimal Arrows) & Partners */
+        /* Testimonials Slider & Partners */
         .testimonial-wrapper {
-            position: relative; max-width: 900px; margin: 0 auto 3rem; 
-            display: flex; align-items: center; justify-content: center;
+            position: relative; max-width: 1000px; margin: 0 auto; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         
         .testimonial-slider { 
             width: 100%; overflow: hidden; position: relative;
             z-index: 5;
         }
-        .testimonial-track { display: flex; transition: transform 0.8s cubic-bezier(0.25, 1, 0.2, 1); width: 100%; }
+        .testimonial-track { display: flex; transition: transform 0.6s ease; width: 100%;}
         .testimonial-slide {
-            min-width: 100%; padding: 4rem 5rem; 
-            font-size: 1.25rem; line-height: 1.8; color: #E2E8F0;
+            min-width: 100%; padding: clamp(3rem, 5vw, 5rem); 
+            font-size: clamp(1.1rem, 1.5vw, 1.3rem); line-height: 1.8; color: #E2E8F0;
             box-sizing: border-box; user-select: none;
             position: relative; text-align: center; font-weight: 300;
         }
         .testimonial-slide::before {
             content: '"'; position: absolute; top: -20px; left: 30px;
-            font-family: var(--font-head); font-size: 8rem; color: rgba(28, 204, 132, 0.05); 
+            font-family: var(--font-head); font-size: clamp(5rem, 8vw, 8rem); color: rgba(28, 204, 132, 0.05); 
         }
 
-        /* Minimalistic Arrows Inside the Slider */
-        .slider-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            background: transparent; color: rgba(255, 255, 255, 0.3); 
-            border: none; font-size: 1.8rem;
-            cursor: pointer; z-index: 10; transition: all 0.3s ease;
-            padding: 10px;
+        /* Modern Minimal Arrows BELOW the Slider */
+        .testimonial-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 1.5rem;
         }
-        .slider-arrow:hover { color: var(--accent); transform: translateY(-50%) scale(1.1); text-shadow: 0 0 15px var(--accent-glow); }
-        .prev-arrow { left: 10px; }
-        .next-arrow { right: 10px; }
+        .minimal-arrow {
+            background: rgba(28, 204, 132, 0.1); /* Subtle green tint */
+            border: 1px solid var(--accent);
+            color: var(--accent); 
+            width: 45px; height: 45px;
+            border-radius: 50%; font-size: 1.2rem;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .minimal-arrow:hover { 
+            background: var(--accent); 
+            color: #000; 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 20px rgba(28, 204, 132, 0.3); 
+        }
 
         .partners-grid {
             display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 25px; margin-top: 2rem;
         }
         .partner-img {
             max-width: 28%; border-radius: 16px; object-fit: contain;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); filter: grayscale(100%) opacity(0.5);
+            transition: transform 0.4s ease, filter 0.4s ease; filter: grayscale(100%) opacity(0.5);
             padding: 15px; background: rgba(255,255,255,0.01); border: 1px solid transparent;
         }
         .partner-img:hover {
@@ -293,88 +337,83 @@
 
         /* FAQs */
         .faq-item { margin-bottom: 1.2rem; cursor: pointer; }
-        .faq-question { padding: 1.8rem; font-family: var(--font-head); font-size: 1.2rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; color: #fff;}
+        .faq-question { padding: 1.8rem; font-family: var(--font-head); font-size: clamp(1.1rem, 1.5vw, 1.25rem); font-weight: 600; display: flex; justify-content: space-between; align-items: center; color: #fff;}
         .faq-question span { 
             background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
             width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            transition: all 0.4s ease; font-size: 1rem; color: var(--text-muted);
+            transition: all 0.3s ease; font-size: 1rem; color: var(--text-muted); flex-shrink: 0;
         }
-        .faq-answer { padding: 0 1.8rem; max-height: 0; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); color: var(--text-muted); }
+        .faq-answer { padding: 0 1.8rem; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; color: var(--text-muted); }
         .faq-item.active { border-color: rgba(28, 204, 132, 0.4); background: rgba(28, 204, 132, 0.02); }
         .faq-item.active .faq-question span { background: var(--accent); border-color: var(--accent); color: #fff; transform: rotate(45deg); box-shadow: 0 0 15px var(--accent-glow);}
         .faq-item.active .faq-answer { padding-bottom: 1.8rem; max-height: 300px; }
 
         /* Contact Section */
-        .contact-container { max-width: 650px; margin: 0 auto; padding: 3.5rem; }
+        .contact-container { max-width: 700px; margin: 0 auto; padding: clamp(2rem, 5vw, 4rem); }
         .input-group { position: relative; }
         .contact-form input, .contact-form textarea {
             width: 100%; padding: 18px; border-radius: 14px;
             background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
             color: var(--text-main); font-family: var(--font-body); font-size: 1.05rem;
-            transition: all 0.4s ease; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+            transition: border-color 0.3s ease, background 0.3s ease; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+            box-sizing: border-box;
         }
         .contact-form input::placeholder, .contact-form textarea::placeholder { color: #475569; }
         .contact-form input:focus, .contact-form textarea:focus {
             border-color: var(--accent); background: rgba(28, 204, 132, 0.03);
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 20px rgba(28, 204, 132, 0.15);
         }
-        .contact-form button { margin-top: 10px; width: 100%; padding: 18px; border-radius: 14px;}
+        .contact-form button { margin-top: 10px; width: 100%; padding: 18px; border-radius: 14px; box-sizing: border-box;}
 
         /* Success Message Animation */
         @keyframes cinematicPop {
-            0% { opacity: 0; transform: scale(0.9) translateY(20px); filter: blur(10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
         }
         .success-box {
             display: none; text-align: center; padding: 4rem 1rem;
-            animation: cinematicPop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: cinematicPop 0.5s ease forwards;
         }
 
         /* Footer */
         footer { 
-            background: rgba(3, 3, 5, 0.8); backdrop-filter: blur(30px);
-            padding: 4rem 5% 2rem; text-align: center; border-top: 1px solid var(--glass-border); 
-            margin-top: 2rem;
+            background: rgba(3, 3, 5, 0.9); border-top: 1px solid var(--glass-border); 
+            padding: 4rem 5% 2rem; text-align: center; margin-top: 2rem;
         }
         .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 2.5rem; margin-bottom: 2.5rem; }
-        .footer-links a { font-family: var(--font-head); color: var(--text-muted); text-decoration: none; transition: 0.3s; font-size: 1rem; font-weight: 500;}
+        .footer-links a { font-family: var(--font-head); color: var(--text-muted); text-decoration: none; transition: color 0.3s; font-size: 1rem; font-weight: 500;}
         .footer-links a:hover { color: var(--text-main); text-shadow: 0 0 15px rgba(255,255,255,0.4); }
         
         .footer-credit {
             display: flex; justify-content: center; align-items: center; gap: 12px;
             color: var(--text-muted); font-size: 0.95rem; flex-wrap: wrap; 
         }
-        .footer-credit a { color: var(--accent); text-decoration: none; transition: 0.3s; font-weight: 600; }
+        .footer-credit a { color: var(--accent); text-decoration: none; transition: text-shadow 0.3s; font-weight: 600; }
         .footer-credit a:hover { text-shadow: 0 0 10px var(--accent-glow); }
 
-        /* SPEED FIX: Cinematic Scroll Animations
-           Reduced delay, duration, and blur for faster, snappier reveals
-        */
+        /* Speed Fixed Scroll Reveal (Removed buggy will-change property) */
         .cinematic-reveal { 
             opacity: 0; 
-            transform: translateY(30px) scale(0.98); 
-            filter: blur(4px);
-            transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); 
+            transform: translateY(30px); 
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
         .cinematic-reveal.visible { 
             opacity: 1; 
-            transform: translateY(0) scale(1); 
-            filter: blur(0);
+            transform: translateY(0); 
         }
 
         /* Mobile Adjustments */
         @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            h2 { font-size: 2rem; }
-            section { padding: 6rem 5%; }
+            /* Adjust menu width and right position for mobile */
+            .flyout-menu { max-width: 300px; padding: 5rem 2rem; }
+            
+            /* Stop floating animations on mobile to save battery and prevent lag */
             .hero-content { animation: none; } 
+            body::before, body::after { animation: none; }
             
             .services-grid { grid-template-columns: 1fr; }
-            .testimonial-slide { padding: 2.5rem 2rem; font-size: 1.1rem; }
             .step { flex-direction: column; text-align: center; gap: 1.5rem; padding: 2rem; }
-            
             .partner-img { max-width: 100%; margin-bottom: 10px; filter: grayscale(0%) opacity(1); background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 20px;} 
-            .contact-container { padding: 2rem 1.5rem; }
             .footer-divider { display: none; }
         }
     </style>
@@ -396,7 +435,7 @@
         <a href="#testimonials" class="nav-link">Partners</a>
         <a href="#about" class="nav-link">About Us</a>
         <a href="#faqs" class="nav-link">FAQs</a>
-        <a href="#contact" class="btn nav-link" style="text-align: center; margin-top: 1rem;">Contact Us</a>
+        <a href="#contact" class="btn menu-fixed-btn">Contact Us</a>
     </nav>
 
     <section id="home">
@@ -430,7 +469,7 @@
     </section>
 
     <section id="services">
-        <div style="text-align: center; max-width: 700px; margin: 0 auto 4rem;">
+        <div style="text-align: center; max-width: 800px; margin: 0 auto 4rem;">
             <h2 class="cinematic-reveal gradient-text">Talent for all your needs</h2>
             <p class="cinematic-reveal">Thousands of Talented Teenagers for all your business needs. Register your interest and start working with smartest talent around.</p>
         </div>
@@ -493,25 +532,26 @@
         <h2 class="cinematic-reveal gradient-text" style="text-align: center; margin-bottom: 3.5rem;">Trusted By Hundreds</h2>
         
         <div class="testimonial-wrapper cinematic-reveal">
-            <div class="testimonial-slider glass-panel" id="testimonialSlider" title="Click to pause sliding">
-                
-                <button class="slider-arrow prev-arrow" id="prevSlide" aria-label="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
-                <button class="slider-arrow next-arrow" id="nextSlide" aria-label="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
-                
+            <div class="testimonial-slider glass-panel" id="testimonialSlider">
                 <div class="testimonial-track" id="testimonialTrack">
                     <div class="testimonial-slide">
                         "Happy customer as Teens work is excellent. It's cost effective with great quality. Have used their graphic designing, Social media and Research Talent."<br><br>
-                        <strong class="highlight" style="font-size: 1.1rem; letter-spacing: 0;">- Darsh Golecha, Monech</strong>
+                        <strong class="highlight" style="font-size: clamp(1rem, 1.2vw, 1.1rem); letter-spacing: 0;">- Darsh Golecha, Monech</strong>
                     </div>
                     <div class="testimonial-slide">
                         "The video creation and social media management by the Teenlancers were phenomenal. They understand current trends better than anyone else, delivering outstanding results on time."<br><br>
-                        <strong class="highlight" style="font-size: 1.1rem; letter-spacing: 0;">- Priya Sharma, TechStart</strong>
+                        <strong class="highlight" style="font-size: clamp(1rem, 1.2vw, 1.1rem); letter-spacing: 0;">- Priya Sharma, TechStart</strong>
                     </div>
                     <div class="testimonial-slide">
                         "We hired a teenager for website development and were blown away by the innovative design and flawless execution. Funngro truly connects you with the smartest talent."<br><br>
-                        <strong class="highlight" style="font-size: 1.1rem; letter-spacing: 0;">- Rahul Desai, E-com Solutions</strong>
+                        <strong class="highlight" style="font-size: clamp(1rem, 1.2vw, 1.1rem); letter-spacing: 0;">- Rahul Desai, E-com Solutions</strong>
                     </div>
                 </div>
+            </div>
+            
+            <div class="testimonial-controls">
+                <button class="minimal-arrow" id="prevSlide" aria-label="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="minimal-arrow" id="nextSlide" aria-label="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
         </div>
 
@@ -525,10 +565,10 @@
     </section>
 
     <section id="about">
-        <div class="glass-panel cinematic-reveal" style="padding: 4rem; text-align: center;">
+        <div class="glass-panel cinematic-reveal" style="padding: clamp(2rem, 5vw, 4rem); text-align: center;">
             <h2 class="gradient-text">It's Fun to Grow</h2>
-            <p style="max-width: 750px; margin: 0 auto 1.5rem;">Funngro is built by educators, Tech enthusiasts, IIM alumni, Finance experts but most importantly by Loving parents. Funngro is our effort to give back to the society.</p>
-            <p style="max-width: 750px; margin: 0 auto;">Funngro is a mission to enable Teenagers to become Financially empowered and grow up to be responsible citizens. Enable Smart Teenagers and Smart Companies to realize their full potentials.</p>
+            <p style="max-width: 800px; margin: 0 auto 1.5rem;">Funngro is built by educators, Tech enthusiasts, IIM alumni, Finance experts but most importantly by Loving parents. Funngro is our effort to give back to the society.</p>
+            <p style="max-width: 800px; margin: 0 auto;">Funngro is a mission to enable Teenagers to become Financially empowered and grow up to be responsible citizens. Enable Smart Teenagers and Smart Companies to realize their full potentials.</p>
         </div>
     </section>
 
@@ -600,10 +640,10 @@
     </footer>
 
     <script>
-        // Hamburger Menu Logic
+        // Hamburger Menu Logic 
         const menuBtn = document.getElementById('menuToggle');
         const flyoutMenu = document.getElementById('flyoutMenu');
-        const navLinks = document.querySelectorAll('.nav-link');
+        const navLinks = document.querySelectorAll('.nav-link, .menu-fixed-btn'); // Added btn to selector
 
         function toggleMenu() {
             menuBtn.classList.toggle('active');
@@ -634,8 +674,8 @@
             });
         });
 
-        // SPEED FIX: Cinematic Scroll Animations
-        // Lower threshold (0.05) means it triggers instantly when scrolling into view
+        // Cinematic Scroll Animations
+        // Ensure elements are visible immediately if observer fails
         const observerOptions = {
             threshold: 0.05, 
             rootMargin: "0px 0px -20px 0px"
@@ -650,7 +690,14 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.cinematic-reveal').forEach(el => fadeObserver.observe(el));
+        document.querySelectorAll('.cinematic-reveal').forEach(el => {
+            fadeObserver.observe(el);
+            // Fallback for anchor links jumping past the observer
+            const rect = el.getBoundingClientRect();
+            if(rect.top < window.innerHeight) {
+                el.classList.add('visible');
+            }
+        });
 
         // Number Counter Animation
         const counters = document.querySelectorAll('.counter');
@@ -659,7 +706,7 @@
                 if (entry.isIntersecting) {
                     const counter = entry.target;
                     const target = +counter.getAttribute('data-target');
-                    const duration = 2500; 
+                    const duration = 2000; 
                     const increment = target / (duration / 16); 
                     let current = 0;
                     
@@ -680,7 +727,7 @@
 
         counters.forEach(counter => countObserver.observe(counter));
 
-        // Testimonial Slider (With Minimal Arrows)
+        // Testimonial Slider & External Arrows Logic
         const track = document.getElementById('testimonialTrack');
         const slider = document.getElementById('testimonialSlider');
         const slides = document.querySelectorAll('.testimonial-slide');
@@ -717,15 +764,13 @@
         slider.addEventListener('mouseenter', stopAutoSlide);
         slider.addEventListener('touchstart', stopAutoSlide);
         
-        // Arrow clicks
-        prevBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
+        // Wire up the new minimal arrows
+        prevBtn.addEventListener('click', () => {
             stopAutoSlide();
             moveToPrevSlide();
         });
         
-        nextBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
+        nextBtn.addEventListener('click', () => {
             stopAutoSlide();
             moveToNextSlide();
         });
@@ -750,7 +795,7 @@
             formData.forEach((value, key) => { object[key] = value });
             const json = JSON.stringify(object);
 
-            // Send via fetch API to avoid page redirect/errors
+            // Send via fetch API
             fetch('https://formsubmit.co/ajax/mrgodpubg@gmail.com', {
                 method: 'POST',
                 headers: {
@@ -762,9 +807,10 @@
             .then(response => response.json())
             .then(data => {
                 if(data.success) {
-                    // Hide form and header smoothly, show cinematic success message
                     form.style.opacity = '0';
                     formHeader.style.opacity = '0';
+                    form.style.transition = 'opacity 0.4s ease';
+                    formHeader.style.transition = 'opacity 0.4s ease';
                     setTimeout(() => {
                         form.style.display = 'none';
                         formHeader.style.display = 'none';
