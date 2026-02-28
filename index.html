@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funngro | Smart Talent for Smart Companies</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS Variables & Reset */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-highlight: rgba(255, 255, 255, 0.1);
+            --accent: #1CCC84;
+            --accent-glow: rgba(28, 204, 132, 0.5);
+            --accent-gradient: linear-gradient(135deg, #1CCC84 0%, #0ca361 100%);
+            --text-main: #FFFFFF;
+            --text-muted: #94A3B8;
+            --font-head: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { 
+            scroll-behavior: smooth; 
+            background-color: #030305;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Cinematic Living Background */
+        body { 
+            overflow-x: hidden; 
+            position: relative;
+            background: radial-gradient(circle at top right, #0a0f1a 0%, #030305 100%);
+            font-family: var(--font-body);
+        }
+
+        /* Animated Ambient Orbs */
+        @keyframes drift {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(3vw, -5vh) scale(1.1); }
+            66% { transform: translate(-2vw, 4vh) scale(0.9); }
+            100% { transform: translate(0, 0) scale(1); }
+        }
+
+        body::before, body::after {
+            content: ''; position: fixed; border-radius: 50%;
+            filter: blur(150px); z-index: -1; pointer-events: none;
+            animation: drift 20s infinite ease-in-out alternate;
+        }
+        body::before {
+            top: -10%; left: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(28,204,132,0.12) 0%, rgba(0,0,0,0) 60%);
+        }
+        body::after {
+            bottom: -20%; right: -10%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(14, 60, 120, 0.15) 0%, rgba(0,0,0,0) 60%);
+            animation-delay: -10s;
+        }
+
+        /* Typography Refinements */
+        h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; }
+        h1 { font-size: 4rem; margin-bottom: 1.2rem; }
+        h2 { font-size: 2.8rem; margin-bottom: 1.5rem; }
+        p { line-height: 1.7; margin-bottom: 1rem; color: var(--text-muted); font-size: 1.1rem; font-weight: 300; }
+        
+        .gradient-text {
+            background: linear-gradient(180deg, #FFFFFF 0%, #94A3B8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .highlight { 
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px var(--accent-glow);
+            font-weight: 800;
+        }
+
+        /* Ultra-Premium Glassmorphism Utility */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            /* The 'edge light' effect */
+            box-shadow: inset 0 1px 0 0 var(--glass-highlight), 
+                        0 20px 40px -10px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Navigation */
+        header {
+            position: fixed; top: 0; left: 0; right: 0;
+            padding: 1.2rem 5%; display: flex;
+            justify-content: space-between; align-items: center;
+            background: rgba(3, 3, 5, 0.5);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+        }
+
+        .logo { 
+            font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; 
+            color: var(--text-main); text-decoration: none; letter-spacing: -0.5px;
+            display: flex; align-items: center; transition: transform 0.4s ease;
+        }
+        .logo span { color: var(--accent); }
+        .logo:hover { transform: scale(1.05); text-shadow: 0 0 20px var(--accent-glow); }
+
+        .menu-btn {
+            background: none; border: none; cursor: pointer;
+            display: flex; flex-direction: column; gap: 6px; z-index: 1001;
+        }
+        .menu-btn span {
+            display: block; width: 30px; height: 2px;
+            background-color: var(--text-main); transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 2px;
+        }
+        .menu-btn.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); background-color: var(--accent); }
+        .menu-btn.active span:nth-child(2) { opacity: 0; transform: translateX(20px); }
+        .menu-btn.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); background-color: var(--accent); }
+
+        .flyout-menu {
+            position: fixed; top: 0; right: -100%;
+            width: 350px; height: 100vh;
+            background: rgba(10, 12, 16, 0.95);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border-left: 1px solid var(--glass-border);
+            padding: 8rem 3rem; transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 999; display: flex; flex-direction: column; gap: 1.5rem;
+        }
+        .flyout-menu.open { right: 0; box-shadow: -30px 0 60px rgba(0,0,0,0.7); }
+        .flyout-menu a {
+            font-family: var(--font-head); color: var(--text-muted); text-decoration: none; 
+            font-size: 1.2rem; font-weight: 500; transition: all 0.4s ease; 
+            padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .flyout-menu a:hover { color: var(--text-main); transform: translateX(8px); border-color: var(--accent); }
+
+        /* Buttons */
+        .btn {
+            display: inline-block; padding: 14px 36px;
+            background: var(--accent-gradient); 
+            color: #ffffff !important; 
+            font-family: var(--font-head); text-decoration: none; 
+            font-weight: 600; font-size: 1.05rem; letter-spacing: 0.5px;
+            border-radius: 50px; border: none;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.3), 0 10px 20px rgba(28, 204, 132, 0.2); 
+            cursor: pointer; position: relative; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s ease;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.4), 0 15px 30px rgba(28, 204, 132, 0.4);
+        }
+        .btn:hover::after { left: 100%; }
+
+        /* Layout */
+        section { padding: 9rem 5%; max-width: 1200px; margin: 0 auto; position: relative; }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Hero Section */
+        #home { 
+            min-height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .hero-content { animation: float 8s ease-in-out infinite; max-width: 850px; margin: 0 auto;}
+        .shark-tank { 
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px; border-radius: 50px;
+            color: #FBBF24; font-family: var(--font-head); font-size: 0.85rem; font-weight: 700;
+            letter-spacing: 2px; margin-bottom: 2rem;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.1);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem; margin-top: 5rem; width: 100%;
+        }
+        .stat-card { padding: 2.5rem 1.5rem; text-align: center; display: flex; flex-direction: column; justify-content: center;}
+        .stat-card:hover { transform: translateY(-8px); border-color: rgba(28, 204, 132, 0.3); background: rgba(255,255,255,0.04); }
+        .stat-card h3 { font-size: 3.5rem; margin-bottom: 0.5rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* Services Grid - 2 Columns */
+        .services-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
+        }
+        .service-card {
+            padding: 1.8rem; display: flex; align-items: center; gap: 20px; cursor: pointer;
+        }
+        .service-card:hover { 
+            transform: scale(1.02); 
+            border-color: rgba(28, 204, 132, 0.3); 
+            background: rgba(255,255,255,0.04);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+        .service-icon {
+            font-size: 1.5rem; color: var(--accent);
+            background: rgba(28, 204, 132, 0.05);
+            width: 55px; height: 55px; display: flex; justify-content: center; align-items: center;
+            border-radius: 16px; border: 1px solid rgba(28, 204, 132, 0.2); flex-shrink: 0;
+            transition: all 0.4s ease;
+        }
+        .service-card:hover .service-icon { background: var(--accent); color: #fff; box-shadow: 0 0 20px var(--accent-glow); }
+
+        /* Steps Section */
+        .steps-container { display: flex; flex-direction: column; gap: 1.5rem; }
+        .step {
+            display: flex; align-items: center; gap: 2.5rem; padding: 2.5rem;
+        }
+        .step-number {
+            background: var(--accent-gradient); color: #fff; width: 60px; height: 60px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5rem; border-radius: 18px; flex-shrink: 0;
+            box-shadow: inset 0 2px 2px rgba(255,255,255,0.4), 0 10px 20px rgba(28, 204, 132, 0.3);
+        }
+        .step h3 { font-size: 1.5rem; margin-bottom: 0.4rem; color: #fff; }
+
+        /* Testimonials Slider (With Minimal Arrows) & Partners */
+        .testimonial-wrapper {
+            position: relative; max-width: 900px; margin: 0 auto 3rem; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .testimonial-slider { 
+            width: 100%; overflow: hidden; position: relative;
+            z-index: 5;
+        }
+        .testimonial-track { display: flex; transition: transform 0.8s cubic-bezier(0.25, 1, 0.2, 1); width: 100%; }
+        .testimonial-slide {
+            min-width: 100%; padding: 4rem 5rem; 
+            font-size: 1.25rem; line-height: 1.8; color: #E2E8F0;
+            box-sizing: border-box; user-select: none;
+            position: relative; text-align: center; font-weight: 300;
+        }
+        .testimonial-slide::before {
+            content: '"'; position: absolute; top: -20px; left: 30px;
+            font-family: var(--font-head); font-size: 8rem; color: rgba(28, 204, 132, 0.05); 
+        }
+
+        /* Minimalistic Arrows Inside the Slider */
+        .slider-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: transparent; color: rgba(255, 255, 255, 0.3); 
+            border: none; font-size: 1.8rem;
+            cursor: pointer; z-index: 10; transition: all 0.3s ease;
+            padding: 10px;
+        }
+        .slider-arrow:hover { color: var(--accent); transform: translateY(-50%) scale(1.1); text-shadow: 0 0 15px var(--accent-glow); }
+        .prev-arrow { left: 10px; }
+        .next-arrow { right: 10px; }
+
+        .partners-grid {
+            display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 25px; margin-top: 2rem;
+        }
+        .partner-img {
+            max-width: 28%; border-radius: 16px; object-fit: contain;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); filter: grayscale(100%) opacity(0.5);
+            padding: 15px; background: rgba(255,255,255,0.01); border: 1px solid transparent;
+        }
+        .partner-img:hover {
+            transform: translateY(-8px) scale(1.05);
+            filter: grayscale(0%) opacity(1);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        /* FAQs */
+        .faq-item { margin-bottom: 1.2rem; cursor: pointer; }
+        .faq-question { padding: 1.8rem; font-family: var(--font-head); font-size: 1.2rem; font-weight: 600; display: flex; justify-content: space-between; align-items: center; color: #fff;}
+        .faq-question span { 
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            transition: all 0.4s ease; font-size: 1rem; color: var(--text-muted);
+        }
+        .faq-answer { padding: 0 1.8rem; max-height: 0; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); color: var(--text-muted); }
+        .faq-item.active { border-color: rgba(28, 204, 132, 0.4); background: rgba(28, 204, 132, 0.02); }
+        .faq-item.active .faq-question span { background: var(--accent); border-color: var(--accent); color: #fff; transform: rotate(45deg); box-shadow: 0 0 15px var(--accent-glow);}
+        .faq-item.active .faq-answer { padding-bottom: 1.8rem; max-height: 300px; }
+
+        /* Contact Section */
+        .contact-container { max-width: 650px; margin: 0 auto; padding: 3.5rem; }
+        .input-group { position: relative; }
+        .contact-form input, .contact-form textarea {
+            width: 100%; padding: 18px; border-radius: 14px;
+            background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border);
+            color: var(--text-main); font-family: var(--font-body); font-size: 1.05rem;
+            transition: all 0.4s ease; outline: none; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+        .contact-form input::placeholder, .contact-form textarea::placeholder { color: #475569; }
+        .contact-form input:focus, .contact-form textarea:focus {
+            border-color: var(--accent); background: rgba(28, 204, 132, 0.03);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 20px rgba(28, 204, 132, 0.15);
+        }
+        .contact-form button { margin-top: 10px; width: 100%; padding: 18px; border-radius: 14px;}
+
+        /* Success Message Animation */
+        @keyframes cinematicPop {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); filter: blur(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+        .success-box {
+            display: none; text-align: center; padding: 4rem 1rem;
+            animation: cinematicPop 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Footer */
+        footer { 
+            background: rgba(3, 3, 5, 0.8); backdrop-filter: blur(30px);
+            padding: 4rem 5% 2rem; text-align: center; border-top: 1px solid var(--glass-border); 
+            margin-top: 2rem;
+        }
+        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 2.5rem; margin-bottom: 2.5rem; }
+        .footer-links a { font-family: var(--font-head); color: var(--text-muted); text-decoration: none; transition: 0.3s; font-size: 1rem; font-weight: 500;}
+        .footer-links a:hover { color: var(--text-main); text-shadow: 0 0 15px rgba(255,255,255,0.4); }
+        
+        .footer-credit {
+            display: flex; justify-content: center; align-items: center; gap: 12px;
+            color: var(--text-muted); font-size: 0.95rem; flex-wrap: wrap; 
+        }
+        .footer-credit a { color: var(--accent); text-decoration: none; transition: 0.3s; font-weight: 600; }
+        .footer-credit a:hover { text-shadow: 0 0 10px var(--accent-glow); }
+
+        /* SPEED FIX: Cinematic Scroll Animations
+           Reduced delay, duration, and blur for faster, snappier reveals
+        */
+        .cinematic-reveal { 
+            opacity: 0; 
+            transform: translateY(30px) scale(0.98); 
+            filter: blur(4px);
+            transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); 
+        }
+        .cinematic-reveal.visible { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            filter: blur(0);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            section { padding: 6rem 5%; }
+            .hero-content { animation: none; } 
+            
+            .services-grid { grid-template-columns: 1fr; }
+            .testimonial-slide { padding: 2.5rem 2rem; font-size: 1.1rem; }
+            .step { flex-direction: column; text-align: center; gap: 1.5rem; padding: 2rem; }
+            
+            .partner-img { max-width: 100%; margin-bottom: 10px; filter: grayscale(0%) opacity(1); background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 20px;} 
+            .contact-container { padding: 2rem 1.5rem; }
+            .footer-divider { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#home" class="logo">Funn<span>gro</span></a>
+        <button class="menu-btn" id="menuToggle" aria-label="Toggle Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </header>
+
+    <nav class="flyout-menu" id="flyoutMenu">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#why-teens" class="nav-link">Why Teens</a>
+        <a href="#steps" class="nav-link">How it Works</a>
+        <a href="#testimonials" class="nav-link">Partners</a>
+        <a href="#about" class="nav-link">About Us</a>
+        <a href="#faqs" class="nav-link">FAQs</a>
+        <a href="#contact" class="btn nav-link" style="text-align: center; margin-top: 1rem;">Contact Us</a>
+    </nav>
+
+    <section id="home">
+        <div class="hero-content">
+            <div class="shark-tank cinematic-reveal"><i class="fa-solid fa-crown" style="font-size: 0.7rem;"></i> FEATURED IN SHARK TANK INDIA</div>
+            <h1 class="cinematic-reveal gradient-text" style="transition-delay: 0.05s;">Smart Talent for <br><span class="highlight">Smart Companies</span></h1>
+            <p class="cinematic-reveal" style="transition-delay: 0.1s;">A trusted platform for 50+ lakh youth to LEARN, EARN, and GROW. Cost effective, timely delivery, innovative ideas while you help the next generation.</p>
+            <div class="cinematic-reveal" style="margin-top: 2.5rem; transition-delay: 0.15s;">
+                <a href="#services" class="btn">Explore Talent &rarr;</a>
+            </div>
+        </div>
+
+        <div class="stats-grid cinematic-reveal" id="stats-section" style="transition-delay: 0.2s;">
+            <div class="stat-card glass-panel">
+                <h3 class="counter" data-target="4000">0</h3>
+                <p style="margin:0; font-family:var(--font-head); font-weight:500; color:#fff;">Companies</p>
+            </div>
+            <div class="stat-card glass-panel">
+                <h3 class="counter" data-target="12">0</h3>
+                <p style="margin:0; font-family:var(--font-head); font-weight:500; color:#fff;">Categories</p>
+            </div>
+            <div class="stat-card glass-panel">
+                <h3 class="counter" data-target="5000000">0</h3>
+                <p style="margin:0; font-family:var(--font-head); font-weight:500; color:#fff;">Teenlancers</p>
+            </div>
+            <div class="stat-card glass-panel">
+                <h3 class="counter" data-target="1000">0</h3>
+                <p style="margin:0; font-family:var(--font-head); font-weight:500; color:#fff;">Live Projects</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services">
+        <div style="text-align: center; max-width: 700px; margin: 0 auto 4rem;">
+            <h2 class="cinematic-reveal gradient-text">Talent for all your needs</h2>
+            <p class="cinematic-reveal">Thousands of Talented Teenagers for all your business needs. Register your interest and start working with smartest talent around.</p>
+        </div>
+        
+        <div class="services-grid cinematic-reveal">
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-pen-nib"></i></div><h4>Blogs & Content</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-hashtag"></i></div><h4>Social Media</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-video"></i></div><h4>Video Creation</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-chart-line"></i></div><h4>Sales & Marketing</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-code"></i></div><h4>Website Dev</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-palette"></i></div><h4>Graphics Design</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-star"></i></div><h4>Influencer</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-mobile-screen"></i></div><h4>Mobile App Dev</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-microphone-lines"></i></div><h4>Voice Over</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-clipboard-list"></i></div><h4>Research & Survey</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-keyboard"></i></div><h4>Data Entry</h4></div>
+            <div class="service-card glass-panel"><div class="service-icon"><i class="fa-solid fa-bug-slash"></i></div><h4>QA & Testing</h4></div>
+        </div>
+    </section>
+
+    <section id="why-teens">
+        <h2 class="cinematic-reveal gradient-text" style="text-align: center; margin-bottom: 3rem;">Why work with Teens</h2>
+        <div class="steps-container">
+            <div class="step glass-panel cinematic-reveal">
+                <div class="step-number"><i class="fa-regular fa-lightbulb"></i></div>
+                <div>
+                    <h3>Innovation</h3>
+                    <p style="margin:0;">No longer worry about using the same old ideas. Get innovative thinking, processes and style of working. Helps companies grow rapidly with timely project delivery.</p>
+                </div>
+            </div>
+            <div class="step glass-panel cinematic-reveal">
+                <div class="step-number"><i class="fa-solid fa-sack-dollar"></i></div>
+                <div>
+                    <h3>Cost Effective</h3>
+                    <p style="margin:0;">Teenagers are the smarter generations, clued in to your customer mindset. Get your work done at a significantly lower cost, save as much as 50% on cost.</p>
+                </div>
+            </div>
+            <div class="step glass-panel cinematic-reveal">
+                <div class="step-number"><i class="fa-solid fa-seedling"></i></div>
+                <div>
+                    <h3>Help the next generation</h3>
+                    <p style="margin:0;">Help the next generation the way someone helped you. Empower teenagers to become financially independent.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="steps">
+        <h2 class="cinematic-reveal gradient-text" style="text-align: center; margin-bottom: 3rem;">Simple steps to start</h2>
+        <div class="steps-container">
+            <div class="step glass-panel cinematic-reveal"><div class="step-number">1</div><div><h3>Register</h3><p style="margin:0;">Register your company on Funngro securely and quickly.</p></div></div>
+            <div class="step glass-panel cinematic-reveal"><div class="step-number">2</div><div><h3>Add Projects</h3><p style="margin:0;">Add projects in a simple process that will take no more than 2 minutes.</p></div></div>
+            <div class="step glass-panel cinematic-reveal"><div class="step-number">3</div><div><h3>Get Applications</h3><p style="margin:0;">Funngro will share a curated list of Teenagers interested in your project.</p></div></div>
+            <div class="step glass-panel cinematic-reveal"><div class="step-number">4</div><div><h3>Select Teens</h3><p style="margin:0;">Review profiles, past work, experience and select Teenagers that fit your work.</p></div></div>
+            <div class="step glass-panel cinematic-reveal"><div class="step-number">5</div><div><h3>Project Delivered</h3><p style="margin:0;">On successful completion, release payment to the Teenager and post your next project.</p></div></div>
+        </div>
+    </section>
+
+    <section id="testimonials">
+        <h2 class="cinematic-reveal gradient-text" style="text-align: center; margin-bottom: 3.5rem;">Trusted By Hundreds</h2>
+        
+        <div class="testimonial-wrapper cinematic-reveal">
+            <div class="testimonial-slider glass-panel" id="testimonialSlider" title="Click to pause sliding">
+                
+                <button class="slider-arrow prev-arrow" id="prevSlide" aria-label="Previous Slide"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="slider-arrow next-arrow" id="nextSlide" aria-label="Next Slide"><i class="fa-solid fa-chevron-right"></i></button>
+                
+                <div class="testimonial-track" id="testimonialTrack">
+                    <div class="testimonial-slide">
+                        "Happy customer as Teens work is excellent. It's cost effective with great quality. Have used their graphic designing, Social media and Research Talent."<br><br>
+                        <strong class="highlight" style="font-size: 1.1rem; letter-spacing: 0;">- Darsh Golecha, Monech</strong>
+                    </div>
+                    <div class="testimonial-slide">
+                        "The video creation and social media management by the Teenlancers were phenomenal. They understand current trends better than anyone else, delivering outstanding results on time."<br><br>
+                        <strong class="highlight" style="font-size: 1.1rem; letter-spacing: 0;">- Priya Sharma, TechStart</strong>
+                    </div>
+                    <div class="testimonial-slide">
+                        "We hired a teenager for website development and were blown away by the innovative design and flawless execution. Funngro truly connects you with the smartest talent."<br><br>
+                        <strong class="highlight" style="font-size: 1.1rem; letter-spacing: 0;">- Rahul Desai, E-com Solutions</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="cinematic-reveal" style="text-align: center; margin: 4rem 0 2rem; font-family: var(--font-head); font-size: 1.2rem; font-weight: 500; letter-spacing: 1px;">COMPANIES & PARTNERS</p>
+        
+        <div class="partners-grid cinematic-reveal">
+            <img src="1000553357.jpg" alt="Companies working with Funngro" class="partner-img">
+            <img src="1000553359.jpg" alt="Companies working with Funngro" class="partner-img">
+            <img src="1000553358.jpg" alt="Partners working with Funngro" class="partner-img">
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="glass-panel cinematic-reveal" style="padding: 4rem; text-align: center;">
+            <h2 class="gradient-text">It's Fun to Grow</h2>
+            <p style="max-width: 750px; margin: 0 auto 1.5rem;">Funngro is built by educators, Tech enthusiasts, IIM alumni, Finance experts but most importantly by Loving parents. Funngro is our effort to give back to the society.</p>
+            <p style="max-width: 750px; margin: 0 auto;">Funngro is a mission to enable Teenagers to become Financially empowered and grow up to be responsible citizens. Enable Smart Teenagers and Smart Companies to realize their full potentials.</p>
+        </div>
+    </section>
+
+    <section id="faqs">
+        <h2 class="cinematic-reveal gradient-text" style="text-align: center; margin-bottom: 3rem;">Frequently Asked Questions</h2>
+        <div class="faq-container cinematic-reveal">
+            <div class="faq-item glass-panel">
+                <div class="faq-question">How do we start working with Teenagers? <span><i class="fa-solid fa-plus"></i></span></div>
+                <div class="faq-answer"><p>Simply register on Funngro, post your project requirements in under 2 minutes, and start receiving curated applications from talented teens.</p></div>
+            </div>
+            <div class="faq-item glass-panel">
+                <div class="faq-question">How does Funngro help us in finding right talent? <span><i class="fa-solid fa-plus"></i></span></div>
+                <div class="faq-answer"><p>We maintain a database of 50,00,000+ Teenlancers across 12 categories. We curate lists based on your specific project needs so you can review their past work before selecting.</p></div>
+            </div>
+            <div class="faq-item glass-panel">
+                <div class="faq-question">Are there any legalities around working with Teens? <span><i class="fa-solid fa-plus"></i></span></div>
+                <div class="faq-answer"><p>Yes, Funngro operates within legal frameworks ensuring safe, freelance, project-based opportunities (Teenlancing) that comply with regulations regarding youth skill development and earnings.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="glass-panel cinematic-reveal contact-container">
+            
+            <div id="contactFormHeader" style="text-align: center; margin-bottom: 2.5rem;">
+                <h2 class="gradient-text" style="margin-bottom: 0.5rem;">Let's Connect</h2>
+                <p>Have questions? Fill out the form below to reach us directly.</p>
+            </div>
+            
+            <form id="ajaxContactForm" class="contact-form" style="display: flex; flex-direction: column; gap: 1.2rem;">
+                <div class="input-group">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="Your Email Address" required>
+                </div>
+                <div class="input-group">
+                    <input type="text" name="subject" placeholder="Subject" required>
+                </div>
+                <div class="input-group">
+                    <textarea name="message" rows="5" placeholder="Write your message here..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn" id="submitBtn">Send Message <i class="fa-solid fa-paper-plane" style="margin-left: 8px;"></i></button>
+            </form>
+
+            <div id="successMessage" class="success-box">
+                <i class="fa-solid fa-circle-check" style="font-size: 5rem; color: var(--accent); margin-bottom: 1.5rem; text-shadow: 0 0 30px var(--accent-glow);"></i>
+                <h3 style="color: #fff; margin-bottom: 0.5rem; font-size: 2rem;">Message Sent!</h3>
+                <p style="color: var(--text-muted); font-size: 1.1rem;">Thank you for reaching out. We will get back to you shortly.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#faqs">FAQs</a>
+            <a href="#contact">Contact Us</a>
+        </div>
+        
+        <div class="footer-credit">
+            <span>&copy; 2026 Funngro. All rights reserved.</span>
+            <span class="footer-divider">•</span>
+            <span>Designed and Developed by <a href="http://maxmedia.wuaze.com" target="_blank">MaxMedia Creatives</a></span>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger Menu Logic
+        const menuBtn = document.getElementById('menuToggle');
+        const flyoutMenu = document.getElementById('flyoutMenu');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        function toggleMenu() {
+            menuBtn.classList.toggle('active');
+            flyoutMenu.classList.toggle('open');
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if(flyoutMenu.classList.contains('open')) toggleMenu();
+            });
+        });
+
+        // FAQ Accordion Logic
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                faqItems.forEach(faq => {
+                    faq.classList.remove('active');
+                    faq.querySelector('.faq-question span').style.transform = 'rotate(0deg)';
+                });
+                if (!isActive) {
+                    item.classList.add('active');
+                    item.querySelector('.faq-question span').style.transform = 'rotate(45deg)'; 
+                }
+            });
+        });
+
+        // SPEED FIX: Cinematic Scroll Animations
+        // Lower threshold (0.05) means it triggers instantly when scrolling into view
+        const observerOptions = {
+            threshold: 0.05, 
+            rootMargin: "0px 0px -20px 0px"
+        };
+
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    fadeObserver.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.cinematic-reveal').forEach(el => fadeObserver.observe(el));
+
+        // Number Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        const countObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = +counter.getAttribute('data-target');
+                    const duration = 2500; 
+                    const increment = target / (duration / 16); 
+                    let current = 0;
+                    
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.innerText = Math.ceil(current).toLocaleString('en-IN') + (target >= 1000 ? '+' : '');
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.innerText = target.toLocaleString('en-IN') + (target >= 1000 ? '+' : '');
+                        }
+                    };
+                    updateCounter();
+                    countObserver.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 }); 
+
+        counters.forEach(counter => countObserver.observe(counter));
+
+        // Testimonial Slider (With Minimal Arrows)
+        const track = document.getElementById('testimonialTrack');
+        const slider = document.getElementById('testimonialSlider');
+        const slides = document.querySelectorAll('.testimonial-slide');
+        const prevBtn = document.getElementById('prevSlide');
+        const nextBtn = document.getElementById('nextSlide');
+
+        let currentIndex = 0;
+        let slideInterval;
+
+        function updateSliderPosition() {
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        function moveToNextSlide() {
+            currentIndex++;
+            if (currentIndex >= slides.length) currentIndex = 0;
+            updateSliderPosition();
+        }
+        
+        function moveToPrevSlide() {
+            currentIndex--;
+            if (currentIndex < 0) currentIndex = slides.length - 1;
+            updateSliderPosition();
+        }
+
+        // Start Auto Slide
+        slideInterval = setInterval(moveToNextSlide, 4500); 
+
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+        }
+
+        // Pause on interaction
+        slider.addEventListener('mouseenter', stopAutoSlide);
+        slider.addEventListener('touchstart', stopAutoSlide);
+        
+        // Arrow clicks
+        prevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            stopAutoSlide();
+            moveToPrevSlide();
+        });
+        
+        nextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            stopAutoSlide();
+            moveToNextSlide();
+        });
+
+        // AJAX Form Submission
+        const form = document.getElementById('ajaxContactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const formHeader = document.getElementById('contactFormHeader');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Change button state
+            submitBtn.innerHTML = 'Sending... <i class="fa-solid fa-spinner fa-spin" style="margin-left: 8px;"></i>';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            // Gather data
+            const formData = new FormData(form);
+            const object = {};
+            formData.forEach((value, key) => { object[key] = value });
+            const json = JSON.stringify(object);
+
+            // Send via fetch API to avoid page redirect/errors
+            fetch('https://formsubmit.co/ajax/mrgodpubg@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    // Hide form and header smoothly, show cinematic success message
+                    form.style.opacity = '0';
+                    formHeader.style.opacity = '0';
+                    setTimeout(() => {
+                        form.style.display = 'none';
+                        formHeader.style.display = 'none';
+                        successMessage.style.display = 'block';
+                    }, 400);
+                } else {
+                    throw new Error('Server returned false success status');
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                alert('Oops! Something went wrong. Please try again.');
+                submitBtn.innerHTML = 'Send Message <i class="fa-solid fa-paper-plane" style="margin-left: 8px;"></i>';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            });
+        });
+    </script>
+</body>
+</html>
